@@ -24,7 +24,7 @@ const createProject = async (req, res) => {
 // Get all projects
 const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find().sort({ order: 1, createdAt: -1 });
+    const projects = await Project.find().sort({ order: 1, createdAt: 1 });
     return res.status(200).json({ success: true, data: projects });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });

@@ -57,3 +57,7 @@ app.use('/api/v1/leads', leadRoutes);
 // dashboard routes
 const dashboardRoutes = require('./routes/dashboardRoutes');
 app.use('/api/v1/dashboard', dashboardRoutes);
+
+// site settings routes
+const siteSettingsRoutes = require('./routes/siteSettingsRoutes');
+app.use('/api/v1/settings', siteSettingsRoutes);
