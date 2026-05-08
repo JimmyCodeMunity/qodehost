@@ -3,9 +3,10 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const User = require("../models/UserModel");
 const { sendEmail, passwordResetTemplate } = require("../services/emailService");
+const config = require("../config/config");
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const JWT_SECRET = config.JWT_SECRET;
+const CLIENT_URL = config.FRONTEND_URL;
 
 // Helper: generate JWT
 const generateToken = (id) => jwt.sign({ id }, JWT_SECRET, { expiresIn: "7d" });
@@ -185,6 +186,53 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+// Admin: get all users
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().sort({ joined: -1 });
+    return res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Admin: update user (role, status, etc.)
+const adminUpdateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, email, phone, role, status, avatar } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+    if (firstName !== undefined) user.firstName = firstName;
+    if (lastName !== undefined) user.lastName = lastName;
+    if (email !== undefined) user.email = email;
+    if (phone !== undefined) user.phone = phone;
+    if (role !== undefined) user.role = role;
+    if (status !== undefined) user.status = status;
+    if (avatar !== undefined) user.avatar = avatar;
+    await user.save();
+    return res.status(200).json({ success: true, message: "User updated.", data: user });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Admin: delete user
+const adminDeleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+    return res.status(200).json({ success: true, message: "User deleted." });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -193,4 +241,7 @@ module.exports = {
   resetPassword,
   getUserProfile,
   updateUserProfile,
+  getAllUsers,
+  adminUpdateUser,
+  adminDeleteUser,
 };

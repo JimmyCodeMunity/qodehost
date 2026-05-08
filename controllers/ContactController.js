@@ -1,8 +1,9 @@
 const Contact = require("../models/ContactModel");
 const { sendEmail } = require("../services/emailService");
+const config = require("../config/config");
 
-const ADMIN_EMAIL = process.env.EMAIL_USERNAME || "qode.current@gmail.com";
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const ADMIN_EMAIL = config.EMAIL_USERNAME;
+const CLIENT_URL = config.FRONTEND_URL;
 
 // Submit contact form
 const submitContact = async (req, res) => {

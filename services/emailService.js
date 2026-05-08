@@ -1,16 +1,21 @@
 const nodemailer = require("nodemailer");
+const config = require("../config/config");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USERNAME,
-    pass: process.env.EMAIL_PASSWORD,
+    user: config.EMAIL_USERNAME,
+    pass: config.EMAIL_PASSWORD,
   },
 });
 
 const sendEmail = async (options) => {
+  if (!config.EMAIL_USERNAME || !config.EMAIL_PASSWORD) {
+    throw new Error("Email credentials not configured");
+  }
+
   const mailOptions = {
-    from: `Qode <${process.env.EMAIL_USERNAME}>`,
+    from: config.EMAIL_FROM,
     to: options.to,
     subject: options.subject,
     html: options.html,

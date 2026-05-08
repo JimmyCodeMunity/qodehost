@@ -3,10 +3,10 @@ const crypto = require('crypto');
 const Admin = require("../models/AdminModel");
 const jwt = require('jsonwebtoken');
 const { sendEmail, passwordResetTemplate } = require("../services/emailService");
-require('dotenv').config();
+const config = require("../config/config");
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const JWT_SECRET = config.JWT_SECRET;
+const CLIENT_URL = config.FRONTEND_URL;
 
 
 // create admin account

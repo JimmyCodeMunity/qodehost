@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 const Admin = require("../models/AdminModel");
 const User = require("../models/UserModel");
+const config = require("../config/config");
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = config.JWT_SECRET;
 
 // Generic JWT verification
 const verifyToken = (token) => {

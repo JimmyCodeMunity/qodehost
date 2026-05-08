@@ -1,24 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const config = require('./config/config');
 const dbConnect = require('./services/dbconnection');
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = config.PORT;
 
-dotenv.config();
-
-app.use(cors({
-    origin: process.env.CLIENT_URL || "https://qodetechnologies.vercel.app",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// Use dynamic CORS configuration
+app.use(cors(config.corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
@@ -50,3 +45,15 @@ app.use('/api/v1/contacts', contactroutes);
 // project routes
 const projectroutes = require('./routes/projectRoutes');
 app.use('/api/v1/projects', projectroutes);
+
+// service request routes
+const serviceRequestRoutes = require('./routes/serviceRequestRoutes');
+app.use('/api/v1/service-requests', serviceRequestRoutes);
+
+// lead routes
+const leadRoutes = require('./routes/leadRoutes');
+app.use('/api/v1/leads', leadRoutes);
+
+// dashboard routes
+const dashboardRoutes = require('./routes/dashboardRoutes');
+app.use('/api/v1/dashboard', dashboardRoutes);

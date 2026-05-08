@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
+const config = require('../config/config');
 
 const dbConnect = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URL);
-        console.log('Database connected');
+        await mongoose.connect(config.MONGODB_URI);
+        console.log(`Database connected (${config.isDevelopment ? 'development' : 'production'} mode)`);
     } catch (error) {
-        console.log(error);
+        console.error('Database connection error:', error);
+        if (config.isProduction) {
+            process.exit(1);
+        }
     }
 }
 
